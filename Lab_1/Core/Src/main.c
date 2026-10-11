@@ -18,6 +18,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#define ExectutableProgramm 3
+
+static uint8_t status = 0;  // Статус світлодіода
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -95,6 +98,50 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
+	  // Стандарнтий "блінк" тривалістю в 1 секунду
+	  if (ExectutableProgramm == 1){
+
+
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);  //Запалюємо світлодіод
+		  HAL_Delay(1000);  //Чекаємо 1000 мс = 1 сек
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);  //Тушимо світлодіод
+		  HAL_Delay(1000);  //Чекаємо 1000 мс = 1 сек
+
+
+	  }
+
+	  // Примітивна кнопка
+	  else if (ExectutableProgramm == 2){
+
+		  if (HAL_GPIO_ReadPin(Button_1_GPIO_Port, Button_1_Pin) != GPIO_PIN_RESET) {     // Умова, якщо кнопка натиснута
+			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);                                    // Запалюємо світлодіод
+		  }
+		  else {                                                                          // Альтернативна умова, якщо кнопка не натиснута
+			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);                                    // Тушимо світлодіод
+		  }
+	  }
+
+	  // Лампа зі зберженням стану
+
+	  else if (ExectutableProgramm == 3){
+
+		  if (HAL_GPIO_ReadPin(Button_1_GPIO_Port, Button_1_Pin) != GPIO_PIN_RESET) {  // Умова, якщо кнопка натиснута
+
+			  HAL_Delay(150);                                                          // Невелика затримка для уникнення брязкіту контактів
+			  status =! status;                                                        // Зміна маркеру статус на протилежне значення 0 / 1
+			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, status);                            // Зміна стану свтілодіоду відповідно до нового статусу маркера
+
+		  }
+	  }
+
+
+
+	  else {
+
+		  //Пуста умова, для випадку, якщо буде задано некоректне значення стану ExectutableProgramm
+
+	  }
 
 
 
